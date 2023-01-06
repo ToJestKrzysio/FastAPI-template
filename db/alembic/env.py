@@ -1,13 +1,13 @@
 import asyncio
 from logging.config import fileConfig
-from os import environ
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from alembic import context
+from db import config as db_config, orm
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,20 +18,11 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-print("URL", config.get_main_option("sqlalchemy.url"))
-if not config.get_main_option("sqlalchemy.url"):
-    USER = environ["POSTGRES_USER"]
-    PASSWORD = environ["POSTGRES_PASSWORD"]
-    PORT = environ["POSTGRES_PORT"]
-    DB = environ["POSTGRES_DB"]
-    HOST = environ.get("DB_HOST", "postgres")
-    config.set_main_option("sqlalchemy.url", f"postgresql+asyncpg://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB}")
+config.set_main_option("sqlalchemy.url", db_config.get_db_url())
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = orm.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
