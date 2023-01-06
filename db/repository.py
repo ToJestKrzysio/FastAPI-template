@@ -27,7 +27,6 @@ class ItemRepository(AbstractRepository):
         stmt = select(orm.Item).where(orm.Item.id == pk)
         results = await session.execute(stmt)
         instance = results.scalar_one()
-        print(instance)
         return models.Item.from_orm(instance)
 
     @staticmethod
