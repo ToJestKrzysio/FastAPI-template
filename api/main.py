@@ -1,7 +1,8 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db import models, config
+from api.dependencies import get_session
+from db import models
 from db.repository import ItemRepository
 
 app = FastAPI()
@@ -10,11 +11,6 @@ app = FastAPI()
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-
-
-async def get_session() -> AsyncSession:
-    async with config.async_session_maker() as session:
-        yield session
 
 
 @app.get("/item/{item_id}", response_model=models.Item)
