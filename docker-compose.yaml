@@ -2,14 +2,14 @@ version: "3"
 services:
   fastapi:
     build:
-      context: ./fastapi
+      context: api
       dockerfile: Dockerfile
     working_dir: /opt/app/
     env_file:
       - ./envs/db.env
     volumes:
-      - ./fastapi/main.py:/opt/app/main.py
-      - ./fastapi/requirements.txt:/opt/app/requirements.txt
+      - ./api/main.py:/opt/app/main.py
+      - ./api/requirements.txt:/opt/app/requirements.txt
       - ./db/:/opt/app/db
       - /tmp/:/tmp/
     ports:
